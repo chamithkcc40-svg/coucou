@@ -120,7 +120,10 @@ pub async fn send(
     let mut body = json!({
         "systemInstruction": { "parts": [{ "text": SYSTEM_PROMPT }] },
         "contents": chat.snapshot(),
-        "generationConfig": { "maxOutputTokens": MAX_TOKENS },
+        "generationConfig": {
+            "maxOutputTokens": MAX_TOKENS,
+            "thinkingConfig": { "thinkingLevel": "low" },
+        },
     });
     if WEB_SEARCH {
         body["tools"] = json!([{ "google_search": {} }]);
@@ -231,7 +234,7 @@ impl Streamed {
 async fn call(key: &str, model: &str, body: &Value) -> Result<Streamed, String> {
     let client = reqwest::Client::builder()
         .connect_timeout(std::time::Duration::from_secs(15))
-        .timeout(std::time::Duration::from_secs(120))
+        .timeout(std::time::Duration::from_secs(180))
         .build()
         .map_err(|e| e.to_string())?;
 
