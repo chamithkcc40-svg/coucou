@@ -234,7 +234,10 @@ impl Streamed {
 async fn call(key: &str, model: &str, body: &Value) -> Result<Streamed, String> {
     let client = reqwest::Client::builder()
         .connect_timeout(std::time::Duration::from_secs(15))
+        // Total budget for the whole request (connect + send + stream the answer).
         .timeout(std::time::Duration::from_secs(180))
+        // Idle/read budget: aborts only if the stream goes silent this long.
+        .read_timeout(std::time::Duration::from_secs(180))
         .build()
         .map_err(|e| e.to_string())?;
 
@@ -277,10 +280,16 @@ async fn call(key: &str, model: &str, body: &Value) -> Result<Streamed, String> 
 }
 
 fn network_error(e: reqwest::Error) -> String {
-    if e.is_timeout() {
-        "Gemini took too long to answer. Try again.".into()
-    } else if e.is_connect() {
+    // Order matters: a connect timeout reports BOTH is_connect() and is_timeout(),
+    // so checking is_timeout() first used to mislabel a 15 s connection failure
+    // as "Gemini took too long". "Took too long" is now reserved for a real
+    // request/read timeout (the 180 s budget) on an established connection.
+    if e.is_connect() {
         "Can't reach Google's servers. Check your internet connection.".into()
+    } else if e.is_timeout() {
+        "Gemini took too long to answer. Try again.".into()
+    } else if let Some(status) = e.status() {
+        format!("Gemini HTTP {}: {e}", status.as_u16())
     } else {
         format!("Network error: {e}")
     }
