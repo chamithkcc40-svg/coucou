@@ -72,7 +72,7 @@ It works from any terminal — Windows Terminal, PowerShell, VS Code, Git Bash.
 
 **Settings… → Gemini** takes your Google AI Studio API key
 ([aistudio.google.com/apikey](https://aistudio.google.com/apikey)); the chat
-uses `gemini-2.5-flash` unless you pick another model there. Keys live in the **Windows
+uses `gemini-3.8-flash` unless you pick another model there. Keys live in the **Windows
 Credential Manager**, never on disk and never in the interface — the island can
 only ask whether a key exists. Same for every integration key.
 

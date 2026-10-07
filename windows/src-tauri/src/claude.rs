@@ -18,7 +18,7 @@ use crate::secrets;
 const API_BASE: &str = "https://generativelanguage.googleapis.com/v1beta/models";
 /// Credential Manager entry holding the Google AI Studio key.
 pub const KEY_NAME: &str = "gemini-api-key";
-/// Gemini 2.5 counts its internal "thinking" against this budget too, so it is
+/// Gemini counts its internal "thinking" against this budget too, so it is
 /// set higher than the visible answer usually needs.
 const MAX_TOKENS: u32 = 8192;
 /// Google Search grounding — the Gemini counterpart of the web_search tool the
@@ -31,7 +31,7 @@ const MAX_INLINE_BYTES: u64 = 14_000_000;
 
 /// The one place the chat model is named. The settings window can override it
 /// (Settings → Gemini → Model); this is the default and the fallback.
-pub const DEFAULT_MODEL: &str = "gemini-2.5-flash";
+pub const DEFAULT_MODEL: &str = "gemini-3.8-flash";
 
 const SYSTEM_PROMPT: &str = "You are Mochi, a personal AI assistant living at the top of the user's screen. \
 You have web search access and can help with absolutely anything — research, coding, finding places, recommendations, tasks, questions. \
@@ -423,8 +423,8 @@ mod tests {
 
     #[test]
     fn model_is_sanitized() {
-        assert_eq!(sanitize_model("gemini-2.5-pro"), "gemini-2.5-pro");
-        assert_eq!(sanitize_model("models/gemini-2.5-flash"), "gemini-2.5-flash");
+        assert_eq!(sanitize_model("gemini-3.7-flash"), "gemini-3.7-flash");
+        assert_eq!(sanitize_model("models/gemini-3.8-flash"), "gemini-3.8-flash");
         assert_eq!(sanitize_model("x/../y?z"), DEFAULT_MODEL);
         assert_eq!(sanitize_model(""), DEFAULT_MODEL);
     }

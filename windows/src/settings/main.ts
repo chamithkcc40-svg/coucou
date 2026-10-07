@@ -179,9 +179,9 @@ const KEY_PLACEHOLDER = "AIza...";
 
 /** The first entry is the default (DEFAULT_MODEL in claude.rs). */
 const MODELS: [string, string][] = [
-  ["gemini-2.5-flash", "Gemini 2.5 Flash"],
-  ["gemini-2.5-pro", "Gemini 2.5 Pro"],
-  ["gemini-2.5-flash-lite", "Gemini 2.5 Flash-Lite"],
+  ["gemini-3.8-flash", "Gemini 3.8 Flash"],
+  ["gemini-3.7-flash", "Gemini 3.7 Flash"],
+  ["gemini-3.6-flash", "Gemini 3.6 Flash"],
 ];
 
 function apiSection(hasKey: boolean): HTMLElement {

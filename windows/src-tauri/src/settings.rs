@@ -63,8 +63,10 @@ pub fn load() -> Settings {
         Err(_) => Settings::default(),
     };
     // A settings.json from the Anthropic-backed builds still names a Claude
-    // model, which the Gemini API does not know.
-    if settings.model.trim().is_empty() || settings.model.starts_with("claude") {
+    // model, which the Gemini API does not know. Older Gemini builds saved a
+    // retired gemini-2.5 model (flash, pro, flash-lite); move those to the default.
+    let saved = settings.model.trim().trim_start_matches("models/");
+    if saved.is_empty() || saved.starts_with("claude") || saved.starts_with("gemini-2.5") {
         settings.model = default_model();
     }
     settings
