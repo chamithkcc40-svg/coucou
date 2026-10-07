@@ -90,7 +90,7 @@ export interface Settings {
   screen: "primary" | "cursor";
   autostart: boolean;
   hooksInstalled: boolean;
-  /** Claude model used by the chat. */
+  /** Gemini model used by the chat. */
   model: string;
 }
 
@@ -105,7 +105,7 @@ export const DEFAULT_SETTINGS: Settings = {
   screen: "primary",
   autostart: false,
   hooksInstalled: false,
-  model: "claude-opus-5",
+  model: "gemini-2.5-flash",
 };
 
 type Listener = () => void;

@@ -6,7 +6,7 @@
 
 **Mochi doesn't get a notch on a PC — so it lives at the top of your screen instead.**
 
-Approve Claude Code permissions, watch your session work, drop a file, chat with Claude, keep an eye on your services — without leaving what you're doing.
+Approve Claude Code permissions, watch your session work, drop a file, chat with Gemini, keep an eye on your services — without leaving what you're doing.
 
 ![Windows 10/11](https://img.shields.io/badge/Windows-10%2F11-0078D4?logo=windows)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-FFC131?logo=tauri&logoColor=black)
@@ -34,7 +34,7 @@ installs for the current user only — no admin prompt.
 <img src="screenshots/compact.png" width="292" alt="The compact island, with the integration pills as mini Mochis">
 <img src="screenshots/overview.png" width="640" alt="The overview: the focused integration on the left, the other pills on the right">
 <img src="screenshots/approval.png" width="640" alt="A Claude Code permission request, with Deny and Allow">
-<img src="screenshots/chat.png" width="640" alt="Chatting with Claude from the island">
+<img src="screenshots/chat.png" width="640" alt="Chatting with Gemini from the island">
 <img src="screenshots/drop.png" width="640" alt="Mochi turned into a box, waiting for a file">
 
 | What you do | What happens |
@@ -70,7 +70,9 @@ It works from any terminal — Windows Terminal, PowerShell, VS Code, Git Bash.
 
 ## Chat and keys
 
-**Settings… → Claude** takes your Anthropic API key. Keys live in the **Windows
+**Settings… → Gemini** takes your Google AI Studio API key
+([aistudio.google.com/apikey](https://aistudio.google.com/apikey)); the chat
+uses `gemini-2.5-flash` unless you pick another model there. Keys live in the **Windows
 Credential Manager**, never on disk and never in the interface — the island can
 only ask whether a key exists. Same for every integration key.
 
@@ -126,7 +128,7 @@ windows/
     island/            state machine, hooks, integrations
     views/             every island view
     settings/          the settings window
-  src-tauri/           Rust backend: window, named pipe, Claude API, pollers
+  src-tauri/           Rust backend: window, named pipe, Gemini API, pollers
   hook/                coucou-hook.exe, the Claude Code relay
   scripts/             icon generator
 ```

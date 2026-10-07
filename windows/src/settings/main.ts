@@ -171,21 +171,26 @@ function claudeSection(status: HookStatus): HTMLElement {
   return section;
 }
 
-// ── Claude API section ────────────────────────────────────────────────────────
+// ── Gemini API section ────────────────────────────────────────────────────────
 
+/** Credential Manager entry for the chat key (same name as KEY_NAME in claude.rs). */
+const GEMINI_KEY = "gemini-api-key";
+const KEY_PLACEHOLDER = "AIza...";
+
+/** The first entry is the default (DEFAULT_MODEL in claude.rs). */
 const MODELS: [string, string][] = [
-  ["claude-opus-5", "Claude Opus 5"],
-  ["claude-sonnet-5", "Claude Sonnet 5"],
-  ["claude-haiku-4-5", "Claude Haiku 4.5"],
+  ["gemini-2.5-flash", "Gemini 2.5 Flash"],
+  ["gemini-2.5-pro", "Gemini 2.5 Pro"],
+  ["gemini-2.5-flash-lite", "Gemini 2.5 Flash-Lite"],
 ];
 
 function apiSection(hasKey: boolean): HTMLElement {
   const dot = statusDot(hasKey);
-  const state = h("span", { class: "hint", text: hasKey ? "Key saved in the Windows Credential Manager." : "No key yet — the chat needs one." });
+  const state = h("span", { class: "hint", text: hasKey ? "Key saved in the Windows Credential Manager." : "No key yet — the chat needs a Google AI Studio key (aistudio.google.com/apikey)." });
 
   const field = h("input", {
     type: "password",
-    placeholder: hasKey ? "••••••••••••  (stored)" : "sk-ant-...",
+    placeholder: hasKey ? "••••••••••••  (stored)" : KEY_PLACEHOLDER,
     style: "flex:1 1 auto;min-width:0",
     autocomplete: "off",
     spellcheck: "false",
@@ -196,12 +201,12 @@ function apiSection(hasKey: boolean): HTMLElement {
   const feedback = h("div", {});
 
   async function refresh() {
-    const present = (await Bridge.secretPresent("anthropic-api-key")) ?? false;
+    const present = (await Bridge.secretPresent(GEMINI_KEY)) ?? false;
     dot.style.background = present ? "#22c55e" : "#f4505e";
     state.textContent = present
       ? "Key saved in the Windows Credential Manager."
-      : "No key yet — the chat needs one.";
-    field.placeholder = present ? "••••••••••••  (stored)" : "sk-ant-...";
+      : "No key yet — the chat needs a Google AI Studio key (aistudio.google.com/apikey).";
+    field.placeholder = present ? "••••••••••••  (stored)" : KEY_PLACEHOLDER;
     clearBtn.style.display = present ? "" : "none";
   }
 
@@ -210,7 +215,7 @@ function apiSection(hasKey: boolean): HTMLElement {
     if (!value) return;
     clear(feedback);
     try {
-      await Bridge.secretSet("anthropic-api-key", value);
+      await Bridge.secretSet(GEMINI_KEY, value);
       field.value = "";
       feedback.append(h("div", { class: "notice ok", text: "Saved. It never touches disk." }));
       await refresh();
@@ -222,7 +227,7 @@ function apiSection(hasKey: boolean): HTMLElement {
   clearBtn.addEventListener("click", async () => {
     clear(feedback);
     try {
-      await Bridge.secretClear("anthropic-api-key");
+      await Bridge.secretClear(GEMINI_KEY);
       feedback.append(h("div", { class: "notice ok", text: "Key removed." }));
       await refresh();
     } catch (err) {
@@ -246,7 +251,7 @@ function apiSection(hasKey: boolean): HTMLElement {
   return h(
     "section",
     {},
-    h("h2", {}, dot, h("span", { text: "Claude" })),
+    h("h2", {}, dot, h("span", { text: "Gemini" })),
     state,
     h("div", { class: "row" }, h("label", { text: "API key" }), field, saveBtn, clearBtn),
     h("div", { class: "row" }, h("label", { text: "Model" }), model),
@@ -429,7 +434,7 @@ async function main() {
     installed: false, settingsPath: "", hookPath: "", hookReady: false,
   };
 
-  const hasKey = (await Bridge.secretPresent("anthropic-api-key")) ?? false;
+  const hasKey = (await Bridge.secretPresent(GEMINI_KEY)) ?? false;
 
   const keys = [
     "stripe-api-key", "github-token", "vercel-token",

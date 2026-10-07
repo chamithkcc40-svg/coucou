@@ -16,7 +16,7 @@ pub struct Settings {
     pub screen: String,
     pub autostart: bool,
     pub hooks_installed: bool,
-    /// Claude model used by the chat. Changeable in the settings window.
+    /// Gemini model used by the chat. Changeable in the settings window.
     /// Defaulted explicitly so a settings.json written by an older build still loads.
     #[serde(default = "default_model")]
     pub model: String,
@@ -58,10 +58,16 @@ fn settings_path() -> PathBuf {
 }
 
 pub fn load() -> Settings {
-    match std::fs::read(settings_path()) {
+    let mut settings: Settings = match std::fs::read(settings_path()) {
         Ok(bytes) => serde_json::from_slice(&bytes).unwrap_or_default(),
         Err(_) => Settings::default(),
+    };
+    // A settings.json from the Anthropic-backed builds still names a Claude
+    // model, which the Gemini API does not know.
+    if settings.model.trim().is_empty() || settings.model.starts_with("claude") {
+        settings.model = default_model();
     }
+    settings
 }
 
 pub fn save(settings: &Settings) -> std::io::Result<()> {
